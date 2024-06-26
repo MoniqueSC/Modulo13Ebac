@@ -1,0 +1,411 @@
+{
+	"info": {
+		"_postman_id": "54291d77-8de4-41e5-be24-bebd498fb84b",
+		"name": "Exercício EBAC",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36448764"
+	},
+	"item": [
+		{
+			"name": "Usuario",
+			"item": [
+				{
+					"name": "Cadastrar usuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validar status code\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Cadastro realizado com sucesso\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Armazenar como variável global o user_id\", function () {\r",
+									"    const resposta = pm.response.json();\r",
+									"    pm.expect(resposta).to.have.property(\"_id\");\r",
+									"    pm.globals.set(\"user_id\", resposta._id);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"packages": {},
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1vbmlxdWVzYW50aWFnb2NAZ21haWwuY29tIiwicGFzc3dvcmQiOiJ0ZXN0ZTEyMyIsImlhdCI6MTcxODg5NDUzMywiZXhwIjoxNzE4ODk1MTMzfQ._vzMDHrZBST09Us6D18rBvgzhXTtjvjQGfzssmB4Sqc",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Monique Santiago\",\r\n  \"email\": \"mohsantiago@qa.com.br\",\r\n  \"password\": \"Moh123\",\r\n  \"administrador\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/usuarios",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar usuario duplicado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Validar status code\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Body is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.message).to.eql(\"Este email já está sendo usado\");\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Monique Santiago\",\r\n  \"email\": \"mohsantiago@qa.com.br\",\r\n  \"password\": \"Moh123\",\r\n  \"administrador\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/usuarios",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar usuarios cadastrados",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"var usuario = jsonData.usuarios[0];\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"A propriedade 'nome' do usuario existe e é 'Monique Santiago'\", function () {\r",
+									"    pm.expect(usuario).to.have.property(\"nome\");\r",
+									"    pm.expect(usuario.nome).to.eql(\"Monique Santiago\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"A propriedade 'email' do usuario existe e é 'mohsantiago@qa.com.br'\", function () {\r",
+									"    pm.expect(usuario).to.have.property(\"email\");\r",
+									"    pm.expect(usuario.email).to.eql(\"mohsantiago@qa.com.br\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"A propriedade 'password' do usuario existe e é 'Moh123'\", function () {\r",
+									"    pm.expect(usuario).to.have.property(\"password\");\r",
+									"    pm.expect(usuario.password).to.eql(\"Moh123\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"A propriedade 'administrador' do usuario existe e é 'true'\", function () {\r",
+									"    pm.expect(usuario).to.have.property(\"administrador\");\r",
+									"    pm.expect(usuario.administrador).to.eql(\"true\");\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/usuarios",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"usuarios"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar usuario por ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"A propriedade 'nome' existe e é 'Monique Santiago'\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"nome\");\r",
+									"    pm.expect(jsonData.nome).to.eql(\"Monique Santiago\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"A propriedade 'email' existe e é 'mohsantiago@qa.com.br'\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"email\");\r",
+									"    pm.expect(jsonData.email).to.eql(\"mohsantiago@qa.com.br\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"A propriedade 'password' existe e é 'Moh123'\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"password\");\r",
+									"    pm.expect(jsonData.password).to.eql(\"Moh123\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"A propriedade 'administrador' existe e é 'true'\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"administrador\");\r",
+									"    pm.expect(jsonData.administrador).to.eql(\"true\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/usuarios/{{user_id}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"usuarios",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registro Alterado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verificar mensagem de registro alterado com sucesso\", function () {\r",
+									"    const resposta = pm.response.json();\r",
+									"    pm.expect(resposta).to.have.property(\"message\");\r",
+									"    pm.expect(resposta.message).to.eql(\"Registro alterado com sucesso\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nome\": \"Fulano da Silva\",\r\n  \"email\": \"beltrano@qa.com.br\",\r\n  \"password\": \"teste\",\r\n  \"administrador\": \"true\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/usuarios/{{user_id}}",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"usuarios",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Excluir usuario",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Verificar mensagem de registro excluído com sucesso\", function () {\r",
+									"    const resposta = pm.response.json();\r",
+									"    pm.expect(resposta).to.have.property(\"message\");\r",
+									"    pm.expect(resposta.message).to.eql(\"Registro excluído com sucesso\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/usuarios/{{user_id}}",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"usuarios",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Usuario nao encontrado",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"A propriedade 'message' existe e é 'Usuário não encontrado'\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"message\");\r",
+									"    pm.expect(jsonData.message).to.eql(\"Usuário não encontrado\");\r",
+									"});\r",
+									"pm.test(\"Status code is 400\", function () {\r",
+									"    pm.response.to.have.status(400);\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/usuarios/ux8o297BlB4q77oC",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"usuarios",
+								"ux8o297BlB4q77oC"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
